@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from matplotlib.image import thumbnail
 from tabulate import tabulate
 from deep_translator import GoogleTranslator
 
@@ -20,8 +21,11 @@ async def ping(ctx):
 
 @bot.command()
 async def languages(ctx):
-    langs = translator.get_supported_languages()
-    await ctx.send(f"Here are the supported languages: {', '.join(langs)}.")
+    embed = discord.Embed(title="Supported languages", url="https://github.com/Iglesys347/translabot/edit/main/README.md#supported-languages",
+                          description="Non-exhaustive list of supported languages depending on the translator used.",
+                          color=discord.Color.blurple())
+    await ctx.send("Here you can find a list of the currently supported languages :")
+    await ctx.send(embed=embed)
 
 
 @bot.command()
