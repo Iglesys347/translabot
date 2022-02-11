@@ -21,7 +21,7 @@ async def ping(ctx):
 
 @bot.command()
 async def languages(ctx):
-    embed = discord.Embed(title="Supported languages", url="https://github.com/Iglesys347/translabot/edit/main/README.md#supported-languages",
+    embed = discord.Embed(title="Supported languages", url="https://github.com/Iglesys347/translabot#supported-languages",
                           description="Non-exhaustive list of supported languages depending on the translator used.",
                           color=discord.Color.blurple())
     await ctx.send("Here you can find a list of the currently supported languages :")
