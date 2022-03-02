@@ -4,17 +4,16 @@ from discord.ext import commands
 import deep_translator
 import os
 import logging
-
+import json
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
-conf = dict(os.environ)
+with open("conf.json", "r") as conf_file:
+    conf = json.load(conf_file)
 
-TOKEN = conf["TOKEN"]
-TARGET_LANGUAGE = conf["TARGET"]
-SOURCE_LANGUAGE = conf["SOURCE"]
-TRANSLATOR_NAME = conf["TRANSLATOR"]
-KEY = conf["KEY"]
+TARGET_LANGUAGE = conf["tgt"]
+SOURCE_LANGUAGE = conf["src"]
+TRANSLATOR_NAME = conf["translator_name"]
 
 DEFAULT_CONFIG = {
     "src": "auto",
@@ -50,7 +49,7 @@ bot = commands.Bot(command_prefix='!')
 try:
     TRANSLATOR = TRANSLATORS[TRANSLATOR_NAME]["translator"]
     if TRANSLATORS[TRANSLATOR_NAME]["key_needed"]:
-        TRANSLATOR = TRANSLATOR(api_key=KEY)
+        TRANSLATOR = TRANSLATOR(api_key=conf["key"])
 except KeyError:
     logger.error(
         "The translator %s does not match any known transaltor names.", TRANSLATOR_NAME)
@@ -134,4 +133,4 @@ async def translator(ctx, translator=None):
         await ctx.send(f"The current translator is **{TRANSLATOR_NAME}**. To change it, you can use the command `!translator translator_name` (e.g. `!translator Google`).")
 
 
-bot.run(TOKEN)
+bot.run(conf["bot_token"])
