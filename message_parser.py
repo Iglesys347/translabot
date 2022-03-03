@@ -34,6 +34,6 @@ ARGS_VALUES = [
 
 if __name__ == "__main__":
     mp = MessageParser("Test message -t=test --source=foo")
-    msg, args = mp.parse()
-    print(f"Message : {msg}")
+    message, args = mp.parse()
+    print(f"Message : {message}")
     print(f"Args : {args}")
