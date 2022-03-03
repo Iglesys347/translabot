@@ -1,11 +1,65 @@
+""""
+This module handles the parsing of the arguements in a message.
+
+It contains one class:
+- MessageParser
+"""
+
 import re
 
 
 class MessageParser:
+    """
+    Class representing the message parser.
+
+    Attributes
+    ----------
+    msg : str
+        The message to parse.
+
+    Methods
+    -------
+    parse()
+        Parse the message and returns the parsed message and arguments.
+    parse_args()
+        Parse the message and returns the arguments.
+    parse_msg()
+        Parse the message and returns the message.
+    """
+
     def __init__(self, msg) -> None:
+        """
+        Class constructor.
+
+        Parameters
+        ----------
+        msg : str
+            The message to parse.
+        """
         self._msg = msg
 
     def parse(self):
+        """
+        Parse the message and returns the parsed message and arguments.
+
+        Returns
+        -------
+        msg : str
+            The message parsed.
+        arg_dict : dict
+            A dictionnary containing the different arguments.
+            The dictionnary looks as follows :
+                {
+                    "arg_key": "arg_value",
+                    ...
+                }
+            The arg_key can take the values described in field "name" of the
+            constant `ARGS_VALUES`.
+
+        See Also
+        --------
+        ARGS_VALUES : list of possible arguments values and their abbreviations.
+        """
         msg_list = self._msg.split()
         arg_dict = {}
         to_remove = []
@@ -19,6 +73,41 @@ class MessageParser:
         for elt in to_remove:
             msg_list.remove(elt)
         return " ".join(msg_list), arg_dict
+
+    def parse_args(self):
+        """
+        Parse the message and returns the parsed arguments.
+
+        Returns
+        -------
+        arg_dict : dict
+            A dictionnary containing the different arguments.
+            The dictionnary looks as follows :
+                {
+                    "arg_key": "arg_value",
+                    ...
+                }
+            The arg_key can take the values described in field "name" of the
+            constant `ARGS_VALUES`.
+
+        See Also
+        --------
+        ARGS_VALUES : list of possible arguments values and their abbreviations.
+        """
+        _, args = self.parse()
+        return args
+
+    def parse_msg(self):
+        """
+        Parse the message and returns the parsed message and the arguments.
+
+        Returns
+        -------
+        msg : str
+            The message parsed.
+        """
+        msg, _ = self.parse()
+        return msg
 
 
 ARGS_VALUES = [
@@ -34,6 +123,6 @@ ARGS_VALUES = [
 
 if __name__ == "__main__":
     mp = MessageParser("Test message -t=test --source=foo")
-    message, args = mp.parse()
+    message, arguments = mp.parse()
     print(f"Message : {message}")
-    print(f"Args : {args}")
+    print(f"Args : {arguments}")
