@@ -1,3 +1,5 @@
+"""Module containing the main code for the bot."""
+
 import json
 import logging
 import discord
@@ -60,10 +62,28 @@ except KeyError:
 
 
 @bot.command()
-async def languages(ctx, trans=None):
-    if trans:
-        if trans in TRANSLATORS:
-            await ctx.send(f"The supported languages for the translator {trans} "
+async def languages(ctx, _translator=None):
+    """
+    Show the supported languages, or a link to a file describing the supported languages.
+
+    Parameters
+    ----------
+    translator : str, default='None'
+        The translator name.
+
+    Examples
+    --------
+    Bot command examples :
+        !languages : send a link to a page referencing the supported languages.
+        !languages <translator_name> : show the languages supported by the translator.
+
+    See also
+    --------
+    List the supported languages : https://github.com/Iglesys347/translabot#supported-languages
+    """
+    if _translator:
+        if _translator in TRANSLATORS:
+            await ctx.send(f"The supported languages for the translator {_translator} "
                            "are the following: "
                            f"{', '.join(TRANSL.get_supported_languages())}.")
         else:
@@ -81,25 +101,73 @@ async def languages(ctx, trans=None):
 
 
 @bot.command()
-async def translate(ctx,  *, text):
+async def translate(ctx, *, text=None):
+    """
+    Translate the text.
+
+    Parameters
+    ----------
+    text : str, default=None
+        The text to translate and the possible arguments. Arguments must be preceded by - or --.
+        The possible arguments are :
+            source, src, s : the source language to translate from
+            target, tgt, t : the target language to translate
+
+    Examples
+    --------
+    Bot command examples :
+        `!translate <text to transalte>` : translate the given text into the configured
+        language (default is english).
+        `!translate --target=french <text to translate>` : translate the given text
+        into the target language (here french). You can also use the following abbreviations :
+        `-tgt`, `-t`.
+        `!translate --source=french <text to transalte>` : translate the given text from
+        the specified language (here french). You can also use the following abbreviations :
+        `-src`, `-s`.
+
+    See also
+    --------
+    List the supported languages : https://github.com/Iglesys347/translabot#supported-languages
+    """
     target = TGT_LANGUAGE
     source = SRC_LANGUAGE
-    mess_parser = MessageParser(text)
-    message, args = mess_parser.parse()
-    if "target" in args:
-        if args["target"] in TRANSL.get_supported_languages():
-            target = args["target"]
-    if "source" in args:
-        if args["source"] in TRANSL.get_supported_languages():
-            source = args["source"]
+    if text is None:
+        await ctx.send("There is nothing to translate :confused:")
+    else:
+        mess_parser = MessageParser(text)
+        message, args = mess_parser.parse()
+        if "target" in args:
+            if args["target"] in TRANSL.get_supported_languages():
+                target = args["target"]
+        if "source" in args:
+            if args["source"] in TRANSL.get_supported_languages():
+                source = args["source"]
 
-    translated = TRANSL(source=source, target=target).translate(
-        text=message)
-    await ctx.send(translated)
+        translated = TRANSL(source=source, target=target).translate(
+            text=message)
+        await ctx.send(translated)
 
 
 @bot.command()
 async def target_language(ctx, _target_language=None):
+    """
+    Change the default target language or give the current one if no parameter is passed.
+
+    Parameters
+    ----------
+    target_language : str, default=None
+        The new default target language.
+
+    Examples
+    --------
+    Bot command examples :
+        `!target_language` : give the current default target language.
+        `!target_language french` : change the default target language to french.
+
+    See also
+    --------
+    List the supported languages : https://github.com/Iglesys347/translabot#supported-languages
+    """
     global TGT_LANGUAGE
     if _target_language:
         if _target_language in TRANSL.get_supported_languages():
@@ -117,6 +185,24 @@ async def target_language(ctx, _target_language=None):
 
 @bot.command()
 async def source_language(ctx, _source_language=None):
+    """
+    Change the default source language or give the current one if no parameter is passed.
+
+    Parameters
+    ----------
+    source_language : str, default=None
+        The new default source language.
+
+    Examples
+    --------
+    Bot command examples :
+        `!source_language` : give the current default source language.
+        `!source_language french` : change the default source language to french.
+
+    See also
+    --------
+    List the supported languages : https://github.com/Iglesys347/translabot#supported-languages
+    """
     global SRC_LANGUAGE
     if _source_language:
         if _source_language in TRANSL.get_supported_languages():
@@ -135,6 +221,24 @@ async def source_language(ctx, _source_language=None):
 
 @bot.command()
 async def translator(ctx, _translator=None):
+    """
+    Change the default  translator or give the current one if no parameter is passed.
+
+    Parameters
+    ----------
+    translator : str, default=None
+        The new default translator language.
+
+    Examples
+    --------
+    Bot command examples :
+        `!translator` : give the current default translator.
+        `!translator Google` : change the default translator to Google.
+
+    See also
+    --------
+    List the supported languages : https://github.com/Iglesys347/translabot#supported-languages
+    """
     global TRANSLATOR_NAME, TRANSL
     if _translator:
         if _translator in TRANSLATORS:
