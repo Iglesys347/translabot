@@ -1,4 +1,13 @@
-"""Module containing the main code for the bot."""
+"""
+Module containing the main code for the bot.
+
+Bot commands :
+- languages : give the supported languages,
+- transalte : translate the given text,
+- target_language : change the default target language or display the current one,
+- source_language : change the default source language or display the current one,
+- translator : change the default translator or display the current one.
+"""
 
 import json
 import logging
